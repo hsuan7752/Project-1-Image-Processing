@@ -24,10 +24,10 @@
 using namespace std;
 
 // constants
-const int           RED             = 0;                // red channel
-const int           GREEN           = 1;                // green channel
-const int           BLUE            = 2;                // blue channel
-const unsigned char BACKGROUND[3]   = { 0, 0, 0 };      // background color
+const int           RED = 0;                // red channel
+const int           GREEN = 1;                // green channel
+const int           BLUE = 2;                // blue channel
+const unsigned char BACKGROUND[3] = { 0, 0, 0 };      // background color
 
 
 // Computes n choose s, efficiently
@@ -36,8 +36,8 @@ double Binomial(int n, int s)
     double        res;
 
     res = 1;
-    for (int i = 1 ; i <= s ; i++)
-        res = (n - i + 1) * res / i ;
+    for (int i = 1; i <= s; i++)
+        res = (n - i + 1) * res / i;
 
     return res;
 }// Binomial
@@ -58,8 +58,8 @@ TargaImage::TargaImage() : width(0), height(0), data(NULL)
 ///////////////////////////////////////////////////////////////////////////////
 TargaImage::TargaImage(int w, int h) : width(w), height(h)
 {
-   data = new unsigned char[width * height * 4];
-   ClearToBlack();
+    data = new unsigned char[width * height * 4];
+    ClearToBlack();
 }// TargaImage
 
 
@@ -69,7 +69,7 @@ TargaImage::TargaImage(int w, int h) : width(w), height(h)
 //      Constructor.  Initialize member variables to values given.
 //
 ///////////////////////////////////////////////////////////////////////////////
-TargaImage::TargaImage(int w, int h, unsigned char *d)
+TargaImage::TargaImage(int w, int h, unsigned char* d)
 {
     int i;
 
@@ -78,7 +78,7 @@ TargaImage::TargaImage(int w, int h, unsigned char *d)
     data = new unsigned char[width * height * 4];
 
     for (i = 0; i < width * height * 4; i++)
-	    data[i] = d[i];
+        data[i] = d[i];
 }// TargaImage
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,15 +86,15 @@ TargaImage::TargaImage(int w, int h, unsigned char *d)
 //      Copy Constructor.  Initialize member to that of input
 //
 ///////////////////////////////////////////////////////////////////////////////
-TargaImage::TargaImage(const TargaImage& image) 
+TargaImage::TargaImage(const TargaImage& image)
 {
-   width = image.width;
-   height = image.height;
-   data = NULL; 
-   if (image.data != NULL) {
-      data = new unsigned char[width * height * 4];
-      memcpy(data, image.data, sizeof(unsigned char) * width * height * 4);
-   }
+    width = image.width;
+    height = image.height;
+    data = NULL;
+    if (image.data != NULL) {
+        data = new unsigned char[width * height * 4];
+        memcpy(data, image.data, sizeof(unsigned char) * width * height * 4);
+    }
 }
 
 
@@ -119,22 +119,22 @@ TargaImage::~TargaImage()
 ///////////////////////////////////////////////////////////////////////////////
 unsigned char* TargaImage::To_RGB(void)
 {
-    unsigned char   *rgb = new unsigned char[width * height * 3];
+    unsigned char* rgb = new unsigned char[width * height * 3];
     int		    i, j;
 
-    if (! data)
-	    return NULL;
+    if (!data)
+        return NULL;
 
     // Divide out the alpha
-    for (i = 0 ; i < height ; i++)
+    for (i = 0; i < height; i++)
     {
-	    int in_offset = i * width * 4;
-	    int out_offset = i * width * 3;
+        int in_offset = i * width * 4;
+        int out_offset = i * width * 3;
 
-	    for (j = 0 ; j < width ; j++)
+        for (j = 0; j < width; j++)
         {
-	        RGBA_To_RGB(data + (in_offset + j*4), rgb + (out_offset + j*3));
-	    }
+            RGBA_To_RGB(data + (in_offset + j * 4), rgb + (out_offset + j * 3));
+        }
     }
 
     return rgb;
@@ -146,17 +146,17 @@ unsigned char* TargaImage::To_RGB(void)
 //      Save the image to a targa file. Returns 1 on success, 0 on failure.
 //
 ///////////////////////////////////////////////////////////////////////////////
-bool TargaImage::Save_Image(const char *filename)
+bool TargaImage::Save_Image(const char* filename)
 {
-    TargaImage	*out_image = Reverse_Rows();
+    TargaImage* out_image = Reverse_Rows();
 
-    if (! out_image)
-	    return false;
+    if (!out_image)
+        return false;
 
     if (!tga_write_raw(filename, width, height, out_image->data, TGA_TRUECOLOR_32))
     {
-	    cout << "TGA Save Error: %s\n", tga_error_string(tga_get_last_error());
-	    return false;
+        cout << "TGA Save Error: %s\n", tga_error_string(tga_get_last_error());
+        return false;
     }
 
     delete out_image;
@@ -171,11 +171,11 @@ bool TargaImage::Save_Image(const char *filename)
 //  must be deleted by caller.  Return NULL on failure.
 //
 ///////////////////////////////////////////////////////////////////////////////
-TargaImage* TargaImage::Load_Image(char *filename)
+TargaImage* TargaImage::Load_Image(char* filename)
 {
-    unsigned char   *temp_data;
-    TargaImage	    *temp_image;
-    TargaImage	    *result;
+    unsigned char* temp_data;
+    TargaImage* temp_image;
+    TargaImage* result;
     int		        width, height;
 
     if (!filename)
@@ -188,8 +188,8 @@ TargaImage* TargaImage::Load_Image(char *filename)
     if (!temp_data)
     {
         cout << "TGA Error: %s\n", tga_error_string(tga_get_last_error());
-	    width = height = 0;
-	    return NULL;
+        width = height = 0;
+        return NULL;
     }
     temp_image = new TargaImage(width, height, temp_data);
     free(temp_data);
@@ -212,7 +212,7 @@ TargaImage* TargaImage::Load_Image(char *filename)
 bool TargaImage::To_Grayscale()
 {
     unsigned char* RGB_data;
-    double* gray_data = new double [width * height];
+    double* gray_data = new double[width * height];
 
     RGB_data = To_RGB();
 
@@ -257,7 +257,7 @@ bool TargaImage::Quant_Uniform()
     }
 
     delete[] RGB_data;
-    
+
     //ClearToBlack();
     return true;
 }// Quant_Uniform
@@ -309,7 +309,7 @@ bool TargaImage::Quant_Populosity()
         color[number].count++;
     }
 
-    sort(color, color+32768, Color::compare);
+    sort(color, color + 32768, Color::compare);
 
     for (int i = 256; i < 32768; ++i)
     {
@@ -596,28 +596,28 @@ bool TargaImage::Dither_Bright()
 ///////////////////////////////////////////////////////////////////////////////
 bool TargaImage::Dither_Cluster()
 {
-   double mask[][4] = {  {0.7059, 0.3529, 0.5882, 0.2353},
-                         {0.0588, 0.9412, 0.8235, 0.4118},
-                         {0.4706, 0.7647, 0.8824, 0.1176},
-                         {0.1765, 0.5294, 0.2941, 0.6471} };
+    double mask[][4] = { {0.7059, 0.3529, 0.5882, 0.2353},
+                          {0.0588, 0.9412, 0.8235, 0.4118},
+                          {0.4706, 0.7647, 0.8824, 0.1176},
+                          {0.1765, 0.5294, 0.2941, 0.6471} };
 
-   int x, y;
+    int x, y;
 
-   To_Grayscale();
+    To_Grayscale();
 
-   double gray_data = 0.0;
+    double gray_data = 0.0;
 
-   for (int i = 0; i < width * height * 4; i += 4)
-   {
-       x = i / 4 % width;
-       y = i / 4 / width;
-       gray_data = (double)data[i] / (double)data[i + 3];
-       if (gray_data < mask[x % 4][y % 4])
-           data[i] = data[i + 1] = data[i + 2] = (double) 0 * data[i + 3];
+    for (int i = 0; i < width * height * 4; i += 4)
+    {
+        x = i / 4 % width;
+        y = i / 4 / width;
+        gray_data = (double)data[i] / (double)data[i + 3];
+        if (gray_data < mask[x % 4][y % 4])
+            data[i] = data[i + 1] = data[i + 2] = (double)0 * data[i + 3];
         else
-           data[i] = data[i + 1] = data[i + 2] = (double) 1 * data[i + 3];
+            data[i] = data[i + 1] = data[i + 2] = (double)1 * data[i + 3];
 
-   }
+    }
 
     //ClearToBlack();
     return true;
@@ -639,14 +639,18 @@ bool TargaImage::Dither_Color()
     int now_left, now_right, next_left, next_right;
     double error_r = 0, error_g = 0, error_b = 0;
     double distance = 0.0, min_distance = 10000.0;
-    unsigned char* RGB_data;
+    unsigned char* temp_data;
+    double* RGB_data = new double[width * height * 3]();
 
     struct Color
     {
         unsigned char r, g, b;
     };
 
-    RGB_data = To_RGB();
+    temp_data = To_RGB();
+
+    for (int i = 0; i < width * height * 3; ++i)
+        RGB_data[i] = temp_data[i];
 
     Color color[256];
 
@@ -681,7 +685,7 @@ bool TargaImage::Dither_Color()
                 distance = 0.0;
                 index = 0;
                 for (int k = 0; k < 256; ++k)
-                {                    
+                {
                     distance = sqrt(pow((double)color[k].r - (double)RGB_data[now], 2) +
                         pow((double)color[k].g - (double)RGB_data[now + 1], 2) +
                         pow((double)color[k].b - (double)RGB_data[now + 2], 2));
@@ -791,7 +795,7 @@ bool TargaImage::Dither_Color()
                         RGB_data[next_left] += error_r * 0.1875;
                         RGB_data[next_left + 1] += error_g * 0.1825;
                         RGB_data[next_left + 2] += error_b * 0.1825;
-                    }                    
+                    }
                 }/**/
             }
         }
@@ -848,11 +852,11 @@ bool TargaImage::Dither_Color()
                     }
                 }
                 //first pixel of the row
-                else if (j== width - 1)
+                else if (j == width - 1)
                 {
                     if (i == height - 1)
                     {
-                        RGB_data[now_left] += error_r * 0.4375 ;
+                        RGB_data[now_left] += error_r * 0.4375;
                         RGB_data[now_left + 1] += error_g * 0.4375;
                         RGB_data[now_left + 2] += error_b * 0.4375;
                     }
@@ -896,7 +900,7 @@ bool TargaImage::Dither_Color()
 
                         RGB_data[next_right] += error_r * 0.1875;
                         RGB_data[next_right + 1] += error_g * 0.1875;
-                        RGB_data[next_right + 2] += error_b * 0.1875;                    
+                        RGB_data[next_right + 2] += error_b * 0.1875;
                     }
                 }
             }
@@ -925,7 +929,7 @@ bool TargaImage::Comp_Over(TargaImage* pImage)
 {
     if (width != pImage->width || height != pImage->height)
     {
-        cout <<  "Comp_Over: Images not the same size\n";
+        cout << "Comp_Over: Images not the same size\n";
         return false;
     }
 
@@ -1027,7 +1031,7 @@ bool TargaImage::Difference(TargaImage* pImage)
         return false;
     }// if
 
-    for (int i = 0 ; i < width * height * 4 ; i += 4)
+    for (int i = 0; i < width * height * 4; i += 4)
     {
         unsigned char        rgb1[3];
         unsigned char        rgb2[3];
@@ -1036,9 +1040,9 @@ bool TargaImage::Difference(TargaImage* pImage)
         RGBA_To_RGB(pImage->data + i, rgb2);
 
         data[i] = abs(rgb1[0] - rgb2[0]);
-        data[i+1] = abs(rgb1[1] - rgb2[1]);
-        data[i+2] = abs(rgb1[2] - rgb2[2]);
-        data[i+3] = 255;
+        data[i + 1] = abs(rgb1[1] - rgb2[1]);
+        data[i + 2] = abs(rgb1[2] - rgb2[2]);
+        data[i + 3] = 255;
     }
 
     return true;
@@ -1238,10 +1242,76 @@ bool TargaImage::Filter_Gaussian()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-bool TargaImage::Filter_Gaussian_N( unsigned int N )
+bool TargaImage::Filter_Gaussian_N(unsigned int N)
 {
-    ClearToBlack();
-   return false;
+    int n = 1;
+    int* pascal = new int[N]();
+    pascal[0] = 1;
+
+    for (int i = 1; i < N; ++i)
+        pascal[i] = pascal[i - 1] * (N - i + 1) / i;
+
+    pascal[N - 1] = 1;
+
+    double** mask;
+
+    mask = new double* [N]();
+
+    for (int i = 0; i < N; ++i)
+        mask[i] = new double[N]();
+
+    for (int i = 0; i < N; ++i)
+        for (int j = 0; j < N; ++j)
+            mask[i][j] = (double) pascal[i] * pascal[j] / pow(N, 2);
+
+    unsigned char* RGB_data;
+    double* temp = new double[width * height * 3]();
+
+    RGB_data = To_RGB();
+
+    int x, y, pos_x, pos_y;
+
+    for (int i = 0; i < width * height; ++i)
+    {
+        int now = 0;
+
+        x = i % width;
+        y = i / width;
+
+        now = (y * width + x) * 3;
+
+        for (int j = 0; j < 5; ++j)
+        {
+            pos_x = abs(x - 2 + j);
+            if (pos_x > width - 1)
+                pos_x = 2 * (width - 1) - pos_x;
+
+            for (int k = 0; k < 5; ++k)
+            {
+                pos_y = abs(y - 2 + k);
+                if (pos_y > height - 1)
+                    pos_y = 2 * (height - 1) - pos_y;
+
+                int pos_now = 0;
+
+                pos_now = (pos_y * width + pos_x) * 3;
+
+                temp[now] += RGB_data[pos_now] * mask[j][k];
+                temp[now + 1] += RGB_data[pos_now + 1] * mask[j][k];
+                temp[now + 2] += RGB_data[pos_now + 2] * mask[j][k];
+            }
+        }
+    }
+
+    for (int i = 0, j = 0; i < width * height * 4; i += 4, j += 3)
+    {
+        data[i] = (double)temp[j] / 255.0 * data[i + 3];
+        data[i + 1] = (double)temp[j + 1] / 255.0 * data[i + 3];
+        data[i + 2] = (double)temp[j + 2] / 255.0 * data[i + 3];
+    }
+
+    //ClearToBlack();
+    return false;
 }// Filter_Gaussian_N
 
 
@@ -1300,12 +1370,19 @@ bool TargaImage::Filter_Edge()
 
     for (int i = 0, j = 0; i < width * height * 4; i += 4, j += 3)
     {
+        if (temp[j] < 0)
+            temp[j] = 0;
+        if (temp[j + 1] < 0)
+            temp[j + 1] = 0;
+        if (temp[j + 2] < 0)
+            temp[j + 2] = 0;
+
         data[i] = (double)temp[j] / 255.0 * data[i + 3];
         data[i + 1] = (double)temp[j + 1] / 255.0 * data[i + 3];
         data[i + 2] = (double)temp[j + 2] / 255.0 * data[i + 3];
     }
     //ClearToBlack();
-    return false;
+    return true;
 }// Filter_Edge
 
 
@@ -1317,8 +1394,73 @@ bool TargaImage::Filter_Edge()
 ///////////////////////////////////////////////////////////////////////////////
 bool TargaImage::Filter_Enhance()
 {
-    ClearToBlack();
-    return false;
+    double mask[5][5] = { { -0.0039, -0.0156, -0.0234, -0.0156, -0.0039 },
+                          { -0.0156, -0.0625, -0.0938, -0.0625, -0.0156 },
+                          { -0.0234, -0.0938,  1.8594, -0.0938, -0.0234 },
+                          { -0.0156, -0.0625, -0.0938, -0.0625, -0.0156 },
+                          { -0.0039, -0.0156, -0.0234, -0.0156, -0.0039 } };
+
+    unsigned char* RGB_data;
+    double* temp = new double[width * height * 3]();
+
+    RGB_data = To_RGB();
+
+    int x, y, pos_x, pos_y;
+
+    for (int i = 0; i < width * height; ++i)
+    {
+        int now = 0;
+
+        x = i % width;
+        y = i / width;
+
+        now = (y * width + x) * 3;
+
+        for (int j = 0; j < 5; ++j)
+        {
+            pos_x = abs(x - 2 + j);
+            if (pos_x > width - 1)
+                pos_x = 2 * (width - 1) - pos_x;
+
+            for (int k = 0; k < 5; ++k)
+            {
+                pos_y = abs(y - 2 + k);
+                if (pos_y > height - 1)
+                    pos_y = 2 * (height - 1) - pos_y;
+
+                int pos_now = 0;
+
+                pos_now = (pos_y * width + pos_x) * 3;
+
+                temp[now] += RGB_data[pos_now] * mask[j][k];
+                temp[now + 1] += RGB_data[pos_now + 1] * mask[j][k];
+                temp[now + 2] += RGB_data[pos_now + 2] * mask[j][k];
+            }
+        }
+    }
+
+    for (int i = 0, j = 0; i < width * height * 4; i += 4, j += 3)
+    {
+        if (temp[j] < 0)
+            temp[j] = 0;
+        if (temp[j + 1] < 0)
+            temp[j + 1] = 0;
+        if (temp[j + 2] < 0)
+            temp[j + 2] = 0;
+
+        if (temp[j] > 255)
+            temp[j] = 255;
+        if (temp[j + 1] > 255)
+            temp[j + 1] = 255;
+        if (temp[j + 2] > 255)
+            temp[j + 2] = 255;
+
+        data[i] = (double)temp[j] / 255.0 * data[i + 3];
+        data[i + 1] = (double)temp[j + 1] / 255.0 * data[i + 3];
+        data[i + 2] = (double)temp[j + 2] / 255.0 * data[i + 3];
+    }
+    //ClearToBlack();
+    return true;
 }// Filter_Enhance
 
 
@@ -1332,7 +1474,8 @@ bool TargaImage::Filter_Enhance()
 ///////////////////////////////////////////////////////////////////////////////
 bool TargaImage::NPR_Paint()
 {
-    ClearToBlack();
+
+    //ClearToBlack();
     return false;
 }
 
@@ -1345,6 +1488,7 @@ bool TargaImage::NPR_Paint()
 ///////////////////////////////////////////////////////////////////////////////
 bool TargaImage::Half_Size()
 {
+
     double mask[3][3] = { { 0.0625, 0.1250, 0.0625 },
                           { 0.1250, 0.2500, 0.1250 },
                           { 0.0625, 0.1250, 0.0625} };
@@ -1399,17 +1543,24 @@ bool TargaImage::Half_Size()
 
     delete[] data;
 
+    for (int i = 0; i < new_width * new_height * 3; ++i)
+        if (temp[i] > 255)
+            temp[i] = 255;
+        else if (temp[i] < 0)
+            temp[i] = 0;
+
     data = new unsigned char[new_width * new_height * 4]();
 
     for (int i = 0, j = 0; i < new_width * new_height * 4; i += 4, j += 3)
     {
-        data[i] = (double)temp[j] ;
+        data[i] = (double)temp[j];
         data[i + 1] = (double)temp[j + 1];
         data[i + 2] = (double)temp[j + 2];
+        data[i + 3] = 255;
     }
 
     //ClearToBlack();
-    return false;
+    return true;
 }// Half_Size
 
 
@@ -1420,7 +1571,161 @@ bool TargaImage::Half_Size()
 ///////////////////////////////////////////////////////////////////////////////
 bool TargaImage::Double_Size()
 {
-    ClearToBlack();
+    double maskee[3][3] = { { 0.0625, 0.1250, 0.0625 },
+                            { 0.1250, 0.2500, 0.1250 },
+                            { 0.0625, 0.1250, 0.0625 } };
+    double maskoo[4][4] = { { 0.0156, 0.0469, 0.0469, 0.0156},
+                            { 0.0469, 0.1406, 0.1406, 0.0469},
+                            { 0.0469, 0.1406, 0.1406, 0.0469},
+                            { 0.0156, 0.0469, 0.0469, 0.0156} };
+    double maskoe[4][3] = { { 0.0313, 0.0625, 0.0313 },
+                            { 0.0938, 0.1875, 0.0938 },
+                            { 0.0938, 0.1875, 0.0938 },
+                            { 0.0313, 0.0625, 0.0313} };
+    double maskeo[3][4] = { { 0.0313, 0.0938, 0.0938, 0.0313 },
+                            { 0.0625, 0.1875, 0.1875, 0.0938 },
+                            { 0.0313, 0.0938, 0.0938, 0.0313 } };
+
+    unsigned char* RGB_data;
+
+    int new_width = width * 2, new_height = height * 2;
+
+    double* temp = new double[new_width * new_height * 3]();
+
+    RGB_data = To_RGB();
+
+    double x, y;
+    int pos_x, pos_y;
+
+    for (int j = 0; j < new_height; ++j)
+    {
+        for (int i = 0; i < new_width; ++i)
+        {
+            int now = 0;
+
+            x = (double) i / 2;
+            y = (double) j / 2;
+
+            now = (j * new_width + i) * 3;
+
+            if (!(i % 2) && !(j % 2))
+            {
+                for (int m = 0; m < 3; ++m)
+                {
+                    pos_x = abs(x - 1 + m);
+                    if (pos_x > width - 1)
+                        pos_x = 2 * (width - 1) - pos_x;
+                    for (int n = 0; n < 3; ++n)
+                    {
+                        pos_y = abs(y - 1 + n);
+                        if (pos_y > height - 1)
+                            pos_y = 2 * (height - 1) - pos_y;
+
+                        int pos_now = 0;
+
+                        pos_now = (pos_y * width + pos_x) * 3;
+
+                        temp[now] += RGB_data[pos_now] * maskee[m][n];
+                        temp[now + 1] += RGB_data[pos_now + 1] * maskee[m][n];
+                        temp[now + 2] += RGB_data[pos_now + 2] * maskee[m][n];
+;                   }
+                }
+            }
+            else if (!(i % 2) && (j % 2))
+            {
+                for (int m = 0; m < 3; ++m)
+                {
+                    pos_x = abs((double) x - 1 + m);
+                    if (pos_x > width - 1)
+                        pos_x = 2 * (width - 1) - pos_x;
+                    for (int n = 0; n < 2; ++n)
+                    {
+                        pos_y = abs((double) y - 1 + n);
+                        if (pos_y > height - 1)
+                            pos_y = 2 * (height - 1) - pos_y;
+
+                        int pos_now = 0;
+
+                        pos_now = (pos_y * width + pos_x) * 3;
+
+                        temp[now] += RGB_data[pos_now] * maskoe[m][n];
+                        temp[now + 1] += RGB_data[pos_now + 1] * maskoe[m][n];
+                        temp[now + 2] += RGB_data[pos_now + 2] * maskoe[m][n];
+                        ;
+                    }
+                }
+            }
+            else if ((i % 2) && !(j % 2))
+            {
+                for (int m = 0; m < 2; ++m)
+                {
+                    pos_x = abs((double) x - 1 + m);
+                    if (pos_x > width - 1)
+                        pos_x = 2 * (width - 1) - pos_x;
+                    for (int n = 0; n < 3; ++n)
+                    {
+                        pos_y = abs(y - 1 + n);
+                        if (pos_y > height - 1)
+                            pos_y = 2 * (height - 1) - pos_y;
+
+                        int pos_now = 0;
+
+                        pos_now = (pos_y * width + pos_x) * 3;
+
+                        temp[now] += RGB_data[pos_now] * maskeo[m][n];
+                        temp[now + 1] += RGB_data[pos_now + 1] * maskeo[m][n];
+                        temp[now + 2] += RGB_data[pos_now + 2] * maskeo[m][n];
+                    }
+                }
+            }
+            else
+            {
+                for (int m = 0; m < 3; ++m)
+                {
+                    pos_x = abs((double) x - 1 + m);
+                    if (pos_x > width - 1)
+                        pos_x = 2 * (width - 1) - pos_x;
+                    for (int n = 0; n < 3; ++n)
+                    {
+                        pos_y = abs((double) y - 1 + n);
+                        if (pos_y > height - 1)
+                            pos_y = 2 * (height - 1) - pos_y;
+
+                        int pos_now = 0;
+
+                        pos_now = (pos_y * width + pos_x) * 3;
+
+                        temp[now] += RGB_data[pos_now] * maskoo[m][n];
+                        temp[now + 1] += RGB_data[pos_now + 1] * maskoo[m][n];
+                        temp[now + 2] += RGB_data[pos_now + 2] * maskoo[m][n];
+                    }
+                }
+            }
+        }
+    }
+
+    width = new_width;
+    height = new_height;
+
+    delete[] data;
+
+    for (int i = 0; i < new_width * new_height * 3; ++i)
+        if (temp[i] > 255)
+            temp[i] = 255;
+        else if (temp[i] < 0)
+            temp[i] = 0;
+
+    data = new unsigned char[new_width * new_height * 4]();
+
+    for (int i = 0, j = 0; i < new_width * new_height * 4; i += 4, j += 3)
+    {
+        data[i] = (double)temp[j];
+        data[i + 1] = (double)temp[j + 1];
+        data[i + 2] = (double)temp[j + 2];
+        data[i + 3] = 255;
+    }
+
+    //ClearToBlack();
     return false;
 }// Double_Size
 
@@ -1457,7 +1762,7 @@ bool TargaImage::Rotate(float angleDegrees)
 //      equivalent composited with a black background.
 //
 ///////////////////////////////////////////////////////////////////////////////
-void TargaImage::RGBA_To_RGB(unsigned char *rgba, unsigned char *rgb)
+void TargaImage::RGBA_To_RGB(unsigned char* rgba, unsigned char* rgb)
 {
     const unsigned char	BACKGROUND[3] = { 0, 0, 0 };
 
@@ -1472,20 +1777,20 @@ void TargaImage::RGBA_To_RGB(unsigned char *rgba, unsigned char *rgb)
     }
     else
     {
-	    float	alpha_scale = (float)255 / (float)alpha;
-	    int	val;
-	    int	i;
+        float	alpha_scale = (float)255 / (float)alpha;
+        int	val;
+        int	i;
 
-	    for (i = 0 ; i < 3 ; i++)
-	    {
-	        val = (int)floor(rgba[i] * alpha_scale);
-	        if (val < 0)
-		    rgb[i] = 0;
-	        else if (val > 255)
-		    rgb[i] = 255;
-	        else
-		    rgb[i] = val;
-	    }
+        for (i = 0; i < 3; i++)
+        {
+            val = (int)floor(rgba[i] * alpha_scale);
+            if (val < 0)
+                rgb[i] = 0;
+            else if (val > 255)
+                rgb[i] = 255;
+            else
+                rgb[i] = val;
+        }
     }
 }// RGA_To_RGB
 
@@ -1498,24 +1803,24 @@ void TargaImage::RGBA_To_RGB(unsigned char *rgba, unsigned char *rgb)
 ///////////////////////////////////////////////////////////////////////////////
 TargaImage* TargaImage::Reverse_Rows(void)
 {
-    unsigned char   *dest = new unsigned char[width * height * 4];
-    TargaImage	    *result;
+    unsigned char* dest = new unsigned char[width * height * 4];
+    TargaImage* result;
     int 	        i, j;
 
-    if (! data)
-    	return NULL;
+    if (!data)
+        return NULL;
 
-    for (i = 0 ; i < height ; i++)
+    for (i = 0; i < height; i++)
     {
-	    int in_offset = (height - i - 1) * width * 4;
-	    int out_offset = i * width * 4;
+        int in_offset = (height - i - 1) * width * 4;
+        int out_offset = i * width * 4;
 
-	    for (j = 0 ; j < width ; j++)
+        for (j = 0; j < width; j++)
         {
-	        dest[out_offset + j * 4] = data[in_offset + j * 4];
-	        dest[out_offset + j * 4 + 1] = data[in_offset + j * 4 + 1];
-	        dest[out_offset + j * 4 + 2] = data[in_offset + j * 4 + 2];
-	        dest[out_offset + j * 4 + 3] = data[in_offset + j * 4 + 3];
+            dest[out_offset + j * 4] = data[in_offset + j * 4];
+            dest[out_offset + j * 4 + 1] = data[in_offset + j * 4 + 1];
+            dest[out_offset + j * 4 + 2] = data[in_offset + j * 4 + 2];
+            dest[out_offset + j * 4 + 3] = data[in_offset + j * 4 + 3];
         }
     }
 
@@ -1543,32 +1848,33 @@ void TargaImage::ClearToBlack()
 //
 ///////////////////////////////////////////////////////////////////////////////
 void TargaImage::Paint_Stroke(const Stroke& s) {
-   int radius_squared = (int)s.radius * (int)s.radius;
-   for (int x_off = -((int)s.radius); x_off <= (int)s.radius; x_off++) {
-      for (int y_off = -((int)s.radius); y_off <= (int)s.radius; y_off++) {
-         int x_loc = (int)s.x + x_off;
-         int y_loc = (int)s.y + y_off;
-         // are we inside the circle, and inside the image?
-         if ((x_loc >= 0 && x_loc < width && y_loc >= 0 && y_loc < height)) {
-            int dist_squared = x_off * x_off + y_off * y_off;
-            if (dist_squared <= radius_squared) {
-               data[(y_loc * width + x_loc) * 4 + 0] = s.r;
-               data[(y_loc * width + x_loc) * 4 + 1] = s.g;
-               data[(y_loc * width + x_loc) * 4 + 2] = s.b;
-               data[(y_loc * width + x_loc) * 4 + 3] = s.a;
-            } else if (dist_squared == radius_squared + 1) {
-               data[(y_loc * width + x_loc) * 4 + 0] = 
-                  (data[(y_loc * width + x_loc) * 4 + 0] + s.r) / 2;
-               data[(y_loc * width + x_loc) * 4 + 1] = 
-                  (data[(y_loc * width + x_loc) * 4 + 1] + s.g) / 2;
-               data[(y_loc * width + x_loc) * 4 + 2] = 
-                  (data[(y_loc * width + x_loc) * 4 + 2] + s.b) / 2;
-               data[(y_loc * width + x_loc) * 4 + 3] = 
-                  (data[(y_loc * width + x_loc) * 4 + 3] + s.a) / 2;
+    int radius_squared = (int)s.radius * (int)s.radius;
+    for (int x_off = -((int)s.radius); x_off <= (int)s.radius; x_off++) {
+        for (int y_off = -((int)s.radius); y_off <= (int)s.radius; y_off++) {
+            int x_loc = (int)s.x + x_off;
+            int y_loc = (int)s.y + y_off;
+            // are we inside the circle, and inside the image?
+            if ((x_loc >= 0 && x_loc < width && y_loc >= 0 && y_loc < height)) {
+                int dist_squared = x_off * x_off + y_off * y_off;
+                if (dist_squared <= radius_squared) {
+                    data[(y_loc * width + x_loc) * 4 + 0] = s.r;
+                    data[(y_loc * width + x_loc) * 4 + 1] = s.g;
+                    data[(y_loc * width + x_loc) * 4 + 2] = s.b;
+                    data[(y_loc * width + x_loc) * 4 + 3] = s.a;
+                }
+                else if (dist_squared == radius_squared + 1) {
+                    data[(y_loc * width + x_loc) * 4 + 0] =
+                        (data[(y_loc * width + x_loc) * 4 + 0] + s.r) / 2;
+                    data[(y_loc * width + x_loc) * 4 + 1] =
+                        (data[(y_loc * width + x_loc) * 4 + 1] + s.g) / 2;
+                    data[(y_loc * width + x_loc) * 4 + 2] =
+                        (data[(y_loc * width + x_loc) * 4 + 2] + s.b) / 2;
+                    data[(y_loc * width + x_loc) * 4 + 3] =
+                        (data[(y_loc * width + x_loc) * 4 + 3] + s.a) / 2;
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }
 
 
@@ -1585,8 +1891,8 @@ Stroke::Stroke() {}
 //
 ///////////////////////////////////////////////////////////////////////////////
 Stroke::Stroke(unsigned int iradius, unsigned int ix, unsigned int iy,
-               unsigned char ir, unsigned char ig, unsigned char ib, unsigned char ia) :
-   radius(iradius),x(ix),y(iy),r(ir),g(ig),b(ib),a(ia)
+    unsigned char ir, unsigned char ig, unsigned char ib, unsigned char ia) :
+    radius(iradius), x(ix), y(iy), r(ir), g(ig), b(ib), a(ia)
 {
 }
 
